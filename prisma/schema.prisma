@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JenisKelamin {
+  PRIA
+  WANITA
+}
+
+model Magang {
+  MagangId     String    @id @default(uuid()) @map("magang_id")
+  Nama         String    @map("nama")
+  PeriodeAwal  DateTime  @map("periode_awal")
+  PeriodeAkhir DateTime  @map("periode_akhir")
+  Formasi      Formasi[]
+
+  @@map("magang")
+}
+
+model Mhs {
+  MhsId            String             @id @default(uuid()) @map("mhs_id")
+  UserId           String             @map("user_id")
+  JenisKelamin     JenisKelamin       @default(PRIA) @map("jenis_kelamin")
+  Nik              String             @map("nik")
+  Nim              String             @map("nim")
+  Alamat           String             @map("alamat")
+  AsalSekolah      String             @map("asal_sekolah")
+  User             User               @relation(fields: [UserId], references: [UserId], onDelete: Cascade)
+  StatusFormasiMhs StatusFormasiMhs[]
+  FileMhs          FileMhs[]
+
+  @@map("mhs")
+}
+
+model Formasi {
+  FormasiId        String             @id @default(uuid()) @map("formasi_id")
+  MagangId         String             @map("magang_id")
+  Nama             String             @map("nama")
+  Kebutuhan        Int                @map("kebutuhan")
+  Magang           Magang             @relation(fields: [MagangId], references: [MagangId], onDelete: Cascade)
+  StatusFormasiMhs StatusFormasiMhs[]
+  File             File[]
+
+  @@map("formasi")
+}
+
+model File {
+  FileId    String    @id @default(uuid()) @map("file_id")
+  FormasiId String    @map("formasi_id")
+  Nama      String    @map("nama")
+  Formasi   Formasi   @relation(fields: [FormasiId], references: [FormasiId], onDelete: Cascade)
+  FileMhs   FileMhs[]
+
+  @@map("file")
+}
+
+model FileMhs {
+  FileMhsId String @id @default(uuid()) @map("file_mhs_id")
+  MhsId     String @map("mhs_id")
+  FileId    String @map("file_id")
+  Nama      String @map("nama")
+  File      File   @relation(fields: [FileId], references: [FileId], onDelete: Cascade)
+  Mhs       Mhs    @relation(fields: [MhsId], references: [MhsId], onDelete: Cascade)
+
+  @@map("file_mhs")
+}
+
+model Role {
+  RoleId       String         @id @default(uuid()) @map("role_id")
+  Nama         String         @map("nama")
+  Icon         String         @map("icon")
+  UserHasRoles UserHasRoles[]
+
+  @@map("roles")
+}
+
+model Status {
+  StatusId         String             @id @default(uuid()) @map("status_id")
+  Nama             String             @map("nama")
+  StatusFormasiMhs StatusFormasiMhs[]
+
+  @@map("status")
+}
+
+model StatusFormasiMhs {
+  FormasiMhsId String @id @default(uuid()) @map("status_formasi_mhs_id")
+  FormasiId    String @map("formasi_id")
+  StatusId     String @map("status_id")
+  MhsId        String @map("mhs_id")
+
+  Formasi Formasi @relation(fields: [FormasiId], references: [FormasiId], onDelete: Cascade)
+  Mhs     Mhs     @relation(fields: [MhsId], references: [MhsId], onDelete: Cascade)
+  Status  Status  @relation(fields: [StatusId], references: [StatusId], onDelete: Cascade)
+
+  @@map("status_formasi_mhs")
+}
+
+model User {
+  UserId    String   @id @default(uuid()) @map("user_id")
+  Nama      String   @map("nama")
+  Email     String   @unique @map("email")
+  Password  String   @map("password")
+  CreatedAt DateTime @map("created_at")
+  UpdatedAt DateTime @map("updated_at")
+
+  Mhs          Mhs[]
+  UserHasRoles UserHasRoles[]
+
+  @@map("user")
+}
+
+model UserHasRoles {
+  RoleId String @map("role_id")
+  UserId String @map("user_id")
+
+  Role Role @relation(fields: [RoleId], references: [RoleId], onDelete: Cascade)
+  User User @relation(fields: [UserId], references: [UserId], onDelete: Cascade)
+
+  @@id([RoleId, UserId])
+  @@map("user_has_roles")
+}

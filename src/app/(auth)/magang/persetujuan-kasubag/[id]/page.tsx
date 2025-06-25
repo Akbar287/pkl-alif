@@ -1,19 +1,21 @@
 import PersetujuanKasubagIdComponent from "@/components/magang/PersetujuanKasubagIdComponent";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/provider/api";
 import React from "react";
 
 export default async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
-  const data = await getSession();
 
-  const dataDiriServer = await prisma.user.findFirst({
+  const dataDiriServer = await prisma.statusFormasiMhs.findFirst({
     select: {
-      UserId: true,
-      Nama: true,
-      Email: true,
       Mhs: {
         select: {
+          User: {
+            select: {
+              UserId: true,
+              Nama: true,
+              Email: true,
+            },
+          },
           MhsId: true,
           UserId: true,
           JenisKelamin: true,
@@ -25,7 +27,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
       },
     },
     where: {
-      UserId: data?.user.id,
+      FormasiMhsId: id,
     },
   });
   const statusServer = await prisma.statusFormasiMhs.findFirst({
@@ -73,7 +75,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const fileUploadedServer = await prisma.fileMhs.findMany({
     where: {
-      MhsId: dataDiriServer?.Mhs[0].MhsId,
+      MhsId: dataDiriServer?.Mhs.MhsId,
       FileId: {
         in: dataServer?.Formasi.File.map((x) => x.FileId),
       },

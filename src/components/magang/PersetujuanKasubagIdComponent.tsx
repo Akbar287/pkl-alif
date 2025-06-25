@@ -63,18 +63,20 @@ const PersetujuanKasubagIdComponent = ({
     };
   } | null;
   dataDiriServer: {
-    Nama: string;
     Mhs: {
-      UserId: string;
+      User: {
+        Nama: string;
+        UserId: string;
+        Email: string;
+      };
       MhsId: string;
+      UserId: string;
       JenisKelamin: JenisKelamin;
       Nik: string;
       Nim: string;
       Alamat: string;
       AsalSekolah: string;
-    }[];
-    UserId: string;
-    Email: string;
+    };
   } | null;
   statusServer: {
     Status: {
@@ -111,7 +113,7 @@ const PersetujuanKasubagIdComponent = ({
   };
 
   const gotoNextStep = () => {
-    if (dataDiriServer?.Mhs[0].MhsId && dataServer) {
+    if (dataDiriServer?.Mhs.MhsId && dataServer) {
       Swal.fire({
         title: "Simpan Keputusan Anda ?",
         text: "Anda tidak dapat mengubah keputusan yang telah di simpan.",
@@ -172,43 +174,31 @@ const PersetujuanKasubagIdComponent = ({
                 <TableRow>
                   <TableCell>Nama</TableCell>
                   <TableCell>
-                    {!dataDiriServer ? "" : dataDiriServer?.Nama}
+                    {!dataDiriServer ? "" : dataDiriServer?.Mhs.User.Nama}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Email</TableCell>
                   <TableCell>
-                    {!dataDiriServer ? "" : dataDiriServer?.Email}
+                    {!dataDiriServer ? "" : dataDiriServer?.Mhs.User.Email}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>NIK</TableCell>
                   <TableCell>
-                    {!dataDiriServer
-                      ? ""
-                      : dataDiriServer.Mhs.length == 0
-                      ? ""
-                      : dataDiriServer.Mhs[0].Nik ?? ""}
+                    {!dataDiriServer ? "" : dataDiriServer.Mhs.Nik ?? ""}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>NIM</TableCell>
                   <TableCell>
-                    {!dataDiriServer
-                      ? ""
-                      : dataDiriServer.Mhs.length == 0
-                      ? ""
-                      : dataDiriServer.Mhs[0].Nim ?? ""}
+                    {!dataDiriServer ? "" : dataDiriServer.Mhs.Nim ?? ""}
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Alamat</TableCell>
                   <TableCell>
-                    {!dataDiriServer
-                      ? ""
-                      : dataDiriServer.Mhs.length == 0
-                      ? ""
-                      : dataDiriServer.Mhs[0].Alamat ?? ""}
+                    {!dataDiriServer ? "" : dataDiriServer.Mhs.Alamat ?? ""}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -216,9 +206,7 @@ const PersetujuanKasubagIdComponent = ({
                   <TableCell>
                     {!dataDiriServer
                       ? ""
-                      : dataDiriServer.Mhs.length == 0
-                      ? ""
-                      : dataDiriServer.Mhs[0].AsalSekolah ?? ""}
+                      : dataDiriServer.Mhs.AsalSekolah ?? ""}
                   </TableCell>
                 </TableRow>
               </TableBody>

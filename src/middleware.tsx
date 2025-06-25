@@ -12,6 +12,12 @@ const protectedPaths = [
   "/manajemen-data/status",
   "/manajemen-data/magang",
   "/manajemen-data/formasi",
+  "/manajemen-data/file",
+  "/magang/pengajuan",
+  "/magang/persetujuan-kasubag",
+  "/magang/persetujuan-subag",
+  "/magang/riwayat",
+  "/magang/penerbitan-sk",
 ];
 
 export default withAuth(mainMiddleware, protectedPaths);
@@ -24,5 +30,11 @@ export const config = {
     "/manajemen-data/status/:path*",
     "/manajemen-data/magang/:path*",
     "/manajemen-data/formasi/:path*",
+    "/manajemen-data/file/:path*",
+    "/magang/pengajuan/:path*",
+    "/magang/persetujuan-kasubag/:path*",
+    "/magang/persetujuan-subag/:path*",
+    "/magang/riwayat/:path*",
+    "/magang/penerbitan-sk/:path*",
   ],
 };

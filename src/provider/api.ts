@@ -43,8 +43,6 @@ const authOptions: AuthOptions = {
                         },
                     })
 
-                    console.dir(userLogin)
-
                     if (userLogin === null) {
                         throw new Error('User tidak ditemukan')
                     }

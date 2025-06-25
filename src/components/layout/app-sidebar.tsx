@@ -62,35 +62,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }, []);
 
-  const data = {
-    navSecondary: [
-      {
-        title: "Dukungan",
-        url: "/dukungan",
-        icon: LifeBuoy,
-      },
-      {
-        title: "Q&A",
-        url: "/question",
-        icon: FileQuestionIcon,
-      },
-    ],
-    projects: [
-      {
-        name: "Buku Petunjuk",
-        url: "/buku-petunjuk",
-        icon: Frame,
-      },
-      {
-        name: "Proses Bisnis RPL",
-        url: "/proses-bisnis-rpl",
-        icon: PieChart,
-      },
-    ],
-  };
-
   const logout = () => {
-    localStorage.removeItem("pmb.iti.role");
+    localStorage.removeItem("pkl-alif.role");
     signOut();
     toast("Sedang Mengeluarkan Anda");
   };

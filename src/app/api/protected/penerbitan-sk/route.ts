@@ -5,7 +5,7 @@ import { PersetujuanSubagPagination } from "@/types/types";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 
-const app = new Hono().basePath("/api/protected/magang/persetujuan-subag");
+const app = new Hono().basePath("/api/protected/penerbitan-sk");
 
 app.use("*", withApiAuth);
 
@@ -21,18 +21,17 @@ app.get("/", async (c) => {
           { Formasi: { Magang: { Nama: { contains: search, mode: "insensitive" } } } },
         ],
         Status: {
-          Nama: "Kelengkapan Dokumen"
+          Nama: "Approved Kasubag"
         }
       }
     : {Status: {
-          Nama: "Kelengkapan Dokumen"
+          Nama: "Approved Kasubag"
         }};
 
   const [data, total] = await Promise.all([
     prisma.statusFormasiMhs.findMany({
       where,
       select: {
-        FormasiMhsId: true,
         Status: {
           select: {
             Nama: true
@@ -52,6 +51,7 @@ app.get("/", async (c) => {
             AsalSekolah: true,
           }
         },
+        FormasiMhsId: true,
         Formasi: {
           select: {
             FormasiId: true,
@@ -118,8 +118,6 @@ app.get("/", async (c) => {
 
 app.put('/', async c => {
   const FormasiMhsId = c.req.query("_fmi");
-  const Keputuan = c.req.query("_p") as unknown as boolean
-  const Keterangan = c.req.query("_k") as unknown as string | null
 
   const check = await prisma.statusFormasiMhs.findFirst({
     where: {
@@ -129,9 +127,8 @@ app.put('/', async c => {
 
   if(!check)
     return c.json({data: [], status: 'error', message: "No queri found"}, 400);
-  
 
-  const status = Keputuan ? await prisma.status.findFirst({select: {StatusId: true}, where: {Nama: "Approved Subbag"}}) : await prisma.status.findFirst({select: {StatusId: true}, where: {Nama: "Declined Subag"}})
+  const status = await prisma.status.findFirst({select: {StatusId: true}, where: {Nama: "Sk Terbit"}})
 
   if(!status) return c.json({data: [], status: 'error', message: "No queri found"}, 400);
   await prisma.statusFormasiMhs.update({
@@ -142,14 +139,6 @@ app.put('/', async c => {
       FormasiMhsId: check.FormasiMhsId
     }
   })
-
-  if(Keterangan && FormasiMhsId) {
-    await prisma.catatanPenilai.create({
-      data: {
-        Nama: 'Subag', Pesan: Keterangan, FormasiMhsId: FormasiMhsId
-      }
-    })
-  }
 
   return c.json(null, 200)
 })

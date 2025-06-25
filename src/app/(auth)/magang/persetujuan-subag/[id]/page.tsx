@@ -1,4 +1,4 @@
-import PengajuanMagangUploadComponent from "@/components/magang/PengajuanMagangUploadComponent";
+import PersetujuanSubagIdComponent from "@/components/magang/PersetujuanSubagIdComponent";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/provider/api";
 import React from "react";
@@ -36,42 +36,38 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
           Nama: true,
         },
       },
-      CatatanPenilai: {
-        select: {
-          Nama: true,
-          Pesan: true,
-        },
-      },
     },
     where: {
-      FormasiId: id,
-      Mhs: {
-        UserId: data?.user.id,
-      },
+      FormasiMhsId: id,
     },
   });
-  const dataServer = await prisma.formasi.findFirst({
+  const dataServer = await prisma.statusFormasiMhs.findFirst({
     select: {
-      FormasiId: true,
-      Nama: true,
-      Kebutuhan: true,
-      File: {
+      FormasiMhsId: true,
+      Formasi: {
         select: {
-          FileId: true,
+          FormasiId: true,
           Nama: true,
-        },
-      },
-      Magang: {
-        select: {
-          MagangId: true,
-          Nama: true,
-          PeriodeAwal: true,
-          PeriodeAkhir: true,
+          Kebutuhan: true,
+          File: {
+            select: {
+              FileId: true,
+              Nama: true,
+            },
+          },
+          Magang: {
+            select: {
+              MagangId: true,
+              Nama: true,
+              PeriodeAwal: true,
+              PeriodeAkhir: true,
+            },
+          },
         },
       },
     },
     where: {
-      FormasiId: id,
+      FormasiMhsId: id,
     },
   });
 
@@ -79,7 +75,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
     where: {
       MhsId: dataDiriServer?.Mhs[0].MhsId,
       FileId: {
-        in: dataServer?.File.map((x) => x.FileId),
+        in: dataServer?.Formasi.File.map((x) => x.FileId),
       },
     },
   });
@@ -87,9 +83,10 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">
-        Program {dataServer?.Magang.Nama} Formasi {dataServer?.Nama}
+        Program {dataServer?.Formasi.Magang.Nama} Formasi{" "}
+        {dataServer?.Formasi.Nama}
       </h1>
-      <PengajuanMagangUploadComponent
+      <PersetujuanSubagIdComponent
         dataDiriServer={dataDiriServer}
         dataServer={dataServer}
         statusServer={statusServer}

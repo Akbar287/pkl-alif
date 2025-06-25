@@ -51,6 +51,7 @@ app.get("/", async (c) => {
             AsalSekolah: true,
           }
         },
+        FormasiMhsId: true,
         Formasi: {
           select: {
             FormasiId: true,
@@ -104,6 +105,7 @@ app.get("/", async (c) => {
         Nim: x.Mhs.Nim ?? '',
         Alamat: x.Mhs.Alamat ?? '',
         AsalSekolah: x.Mhs.AsalSekolah ?? '',
+        FormasiMhsId: x.FormasiMhsId
     })),
     totalElement: total,
     totalPage: Math.ceil(total / limit),
@@ -115,21 +117,21 @@ app.get("/", async (c) => {
 });
 
 app.put('/', async c => {
-  const FormasiId = c.req.query("formasi-id");
-  const MhsId = c.req.query("mhs-id");
+  const FormasiMhsId = c.req.query("_fmi");
+  const Keputuan = c.req.query("_p") as unknown as boolean
+  const Keterangan = c.req.query("_k") as unknown as string | null
 
   const check = await prisma.statusFormasiMhs.findFirst({
     where: {
-      FormasiId, 
-      MhsId
+      FormasiMhsId: FormasiMhsId
     }
   })
 
-  if(!check) 
+  if(!check)
     return c.json({data: [], status: 'error', message: "No queri found"}, 400);
   
 
-  const status = await prisma.status.findFirst({select: {StatusId: true}, where: {Nama: "Approved Subbag"}})
+  const status = Keputuan ? await prisma.status.findFirst({select: {StatusId: true}, where: {Nama: "Approved Kasubag"}}) : await prisma.status.findFirst({select: {StatusId: true}, where: {Nama: "Declined Kasubag"}})
 
   if(!status) return c.json({data: [], status: 'error', message: "No queri found"}, 400);
   await prisma.statusFormasiMhs.update({
@@ -141,6 +143,13 @@ app.put('/', async c => {
     }
   })
 
+  if(Keterangan && FormasiMhsId) {
+    await prisma.catatanPenilai.create({
+      data: {
+        Nama: 'Kasubag', Pesan: Keterangan, FormasiMhsId: FormasiMhsId
+      }
+    })
+  }
   return c.json(null, 200)
 })
 

@@ -58,6 +58,7 @@ export type RiwayatMagangPagination = {
 };
 
 export type PersetujuanSubagPagination = {
+  FormasiMhsId: string;
   MagangId: string;
   NamaMagang: string;
   PeriodeAwal: Date;
@@ -76,6 +77,7 @@ export type PersetujuanSubagPagination = {
 };
 
 export type PersetujuanKasubagPagination = {
+  FormasiMhsId: string;
   MagangId: string;
   NamaMagang: string;
   PeriodeAwal: Date;

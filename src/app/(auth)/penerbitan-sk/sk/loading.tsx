@@ -1,12 +1,12 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import React from 'react'
+import { Skeleton } from "@/components/ui/skeleton";
+import React from "react";
 
 const Loading = () => {
-    return (
-        <div className="w-full min-h-screen">
-            <Skeleton className="w-full h-32" />
-        </div>
-    )
-}
+  return (
+    <div className="w-full min-h-screen">
+      <Skeleton className="w-full h-32" />
+    </div>
+  );
+};
 
-export default Loading
+export default Loading;

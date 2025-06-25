@@ -94,15 +94,26 @@ model Status {
   @@map("status")
 }
 
+model CatatanPenilai {
+  CatatanPenilaiId String           @id @default(uuid()) @map("catatan_penilai_id")
+  FormasiMhsId     String           @map("status_formasi_mhs_id")
+  Nama             String           @map("nama")
+  Pesan            String           @map("pesan")
+  StatusFormasiMhs StatusFormasiMhs @relation(fields: [FormasiMhsId], references: [FormasiMhsId], onDelete: Cascade)
+
+  @@map("catatan_penilai")
+}
+
 model StatusFormasiMhs {
   FormasiMhsId String @id @default(uuid()) @map("status_formasi_mhs_id")
   FormasiId    String @map("formasi_id")
   StatusId     String @map("status_id")
   MhsId        String @map("mhs_id")
 
-  Formasi Formasi @relation(fields: [FormasiId], references: [FormasiId], onDelete: Cascade)
-  Mhs     Mhs     @relation(fields: [MhsId], references: [MhsId], onDelete: Cascade)
-  Status  Status  @relation(fields: [StatusId], references: [StatusId], onDelete: Cascade)
+  Formasi        Formasi          @relation(fields: [FormasiId], references: [FormasiId], onDelete: Cascade)
+  Mhs            Mhs              @relation(fields: [MhsId], references: [MhsId], onDelete: Cascade)
+  Status         Status           @relation(fields: [StatusId], references: [StatusId], onDelete: Cascade)
+  CatatanPenilai CatatanPenilai[]
 
   @@map("status_formasi_mhs")
 }

@@ -21,11 +21,12 @@ export async function getPersetujuanKasubagPagination(
 }
 
 export async function updateStatusApprovedKasubag(
-  FormasiId: string,
-  MhsId: string
+  FormasiMhsId: string,
+  Keterangan: string,
+  Keputusan: boolean
 ): Promise<void> {
   const res = await fetch(
-    `${BASE_URL}/api/protected/magang/persetujuan-kasubag?formasi-id=${FormasiId}&mhs-id=${MhsId}`,
+    `${BASE_URL}/api/protected/magang/persetujuan-kasubag?_fmi=${FormasiMhsId}&_k=${Keterangan}&_p=${Keputusan}`,
     {
       method: "PUT",
       headers: {

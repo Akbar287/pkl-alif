@@ -59,12 +59,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { useRouter } from "next/navigation";
-import { getPersetujuanSubagPagination } from "@/services/Magang/PersetujuanSubagService";
+import { getPenerbitanSkPagination } from "@/services/Magang/PenerbitanSkService";
 
-const PersetujuanSubagComponent = () => {
+const PenerbitanSkComponent = () => {
   const router = useRouter();
   const [dataMagang, setDataMagang] = React.useState<
     PersetujuanSubagPagination[]
@@ -102,7 +101,7 @@ const PersetujuanSubagComponent = () => {
 
   React.useEffect(() => {
     setLoading(true);
-    getPersetujuanSubagPagination(
+    getPenerbitanSkPagination(
       paginationState.page,
       paginationState.limit,
       search
@@ -178,7 +177,7 @@ const PersetujuanSubagComponent = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() =>
-                  router.push("/magang/persetujuan-subag/" + jd.FormasiMhsId)
+                  router.push("/penerbitan-sk/sk/" + jd.FormasiMhsId)
                 }
               >
                 Lihat Detail
@@ -389,7 +388,7 @@ const PersetujuanSubagComponent = () => {
   );
 };
 
-export default PersetujuanSubagComponent;
+export default PenerbitanSkComponent;
 
 function SheetDetailTicket({
   openDialog,

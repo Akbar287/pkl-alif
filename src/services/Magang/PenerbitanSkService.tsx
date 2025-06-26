@@ -14,10 +14,26 @@ export async function getPenerbitanSkPagination(
     search,
   });
   const res = await fetch(
-    `${BASE_URL}/api/protected/penerbitan-sk?${params.toString()}`
+    `${BASE_URL}/api/protected/penerbitan-sk?${params.toString()}&_j=_pg`
   );
   if (!res.ok) throw new Error("Failed to fetch penerbitan sk ");
   return res.json();
+}
+
+export async function getFileSkBlobByNamafile(
+  NamaFile: string
+): Promise<string> {
+  const res = await fetch(
+    `${BASE_URL}/api/protected/penerbitan-sk?_j=_fs&_nf=${NamaFile}`
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to get dokumen ");
+  }
+
+  const blob = await res.blob();
+  const previewUrl = URL.createObjectURL(blob);
+  return previewUrl;
 }
 
 export async function updateStatusPenerbitanSk(

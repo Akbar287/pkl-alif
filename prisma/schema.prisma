@@ -66,6 +66,17 @@ model File {
   @@map("file")
 }
 
+model FileSk {
+  FileSkId         String           @id @default(uuid()) @map("file_sk_id")
+  FormasiMhsId     String           @map("formasi_mhs_id")
+  Nama             String           @map("nama")
+  KodeQr           String           @map("kode_qr")
+  CreatedAt        DateTime         @map("created_at")
+  StatusFormasiMhs StatusFormasiMhs @relation(fields: [FormasiMhsId], references: [FormasiMhsId], onDelete: Cascade)
+
+  @@map("file_sk")
+}
+
 model FileMhs {
   FileMhsId String @id @default(uuid()) @map("file_mhs_id")
   MhsId     String @map("mhs_id")
@@ -114,6 +125,7 @@ model StatusFormasiMhs {
   Mhs            Mhs              @relation(fields: [MhsId], references: [MhsId], onDelete: Cascade)
   Status         Status           @relation(fields: [StatusId], references: [StatusId], onDelete: Cascade)
   CatatanPenilai CatatanPenilai[]
+  FileSk         FileSk[]
 
   @@map("status_formasi_mhs")
 }

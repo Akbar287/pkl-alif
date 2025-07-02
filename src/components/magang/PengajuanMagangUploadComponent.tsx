@@ -99,6 +99,7 @@ const PengajuanMagangUploadComponent = ({
   fileUploadedServer: {
     Nama: string;
     MhsId: string;
+    FileBase: string;
     FileId: string;
     FileMhsId: string;
   }[];
@@ -134,6 +135,7 @@ const PengajuanMagangUploadComponent = ({
         FileMhsId: "",
         FileId: FileId,
         MhsId: MhsId,
+        FileBase: "",
         Nama: "",
       });
     }

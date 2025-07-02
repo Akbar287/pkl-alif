@@ -89,6 +89,7 @@ const PersetujuanKasubagIdComponent = ({
     MhsId: string;
     FileId: string;
     FileMhsId: string;
+    FileBase: string;
   }[];
 }) => {
   const router = useRouter();

@@ -88,6 +88,7 @@ const PersetujuanSubagIdComponent = ({
     Nama: string;
     MhsId: string;
     FileId: string;
+    FileBase: string;
     FileMhsId: string;
   }[];
 }) => {

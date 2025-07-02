@@ -122,35 +122,27 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
       chunks.push(chunk);
     }
     const pdfBuffer = Buffer.concat(chunks);
+    const sanitizedInternName = !dataDiriServer
+      ? "-"
+      : dataDiriServer.Mhs.User.Email.replace(/\s+/g, "_");
+    const filename = `Surat_Keterangan_${sanitizedInternName}_${id}.pdf`;
+    const base64PDF = pdfBuffer.toString("base64");
 
-    try {
-      const pdfsDir = path.join(process.cwd(), "tmp");
-      await fs.mkdir(pdfsDir, { recursive: true });
-      const sanitizedInternName = !dataDiriServer
-        ? "-"
-        : dataDiriServer.Mhs.User.Email.replace(/\s+/g, "_");
-      const filename = `Surat_Keterangan_${sanitizedInternName}_${id}.pdf`;
-      const filePath = path.join(pdfsDir, filename);
-
-      await fs.writeFile(filePath, pdfBuffer);
-
-      fileSk = await prisma.fileSk.create({
-        select: {
-          FormasiMhsId: true,
-          Nama: true,
-          KodeQr: true,
-          CreatedAt: true,
-        },
-        data: {
-          FormasiMhsId: id,
-          Nama: filename,
-          KodeQr: qrCodeImage,
-          CreatedAt: new Date(),
-        },
-      });
-    } catch (saveError) {
-      console.error("Gagal menyimpan file PDF ke server:", saveError);
-    }
+    fileSk = await prisma.fileSk.create({
+      select: {
+        FormasiMhsId: true,
+        Nama: true,
+        KodeQr: true,
+        CreatedAt: true,
+      },
+      data: {
+        FormasiMhsId: id,
+        FileBase: base64PDF,
+        Nama: filename,
+        KodeQr: qrCodeImage,
+        CreatedAt: new Date(),
+      },
+    });
   }
 
   return (

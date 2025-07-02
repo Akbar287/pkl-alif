@@ -71,6 +71,7 @@ model FileSk {
   FormasiMhsId     String           @map("formasi_mhs_id")
   Nama             String           @map("nama")
   KodeQr           String           @map("kode_qr")
+  FileBase         String           @map("file_base")
   CreatedAt        DateTime         @map("created_at")
   StatusFormasiMhs StatusFormasiMhs @relation(fields: [FormasiMhsId], references: [FormasiMhsId], onDelete: Cascade)
 
@@ -82,6 +83,7 @@ model FileMhs {
   MhsId     String @map("mhs_id")
   FileId    String @map("file_id")
   Nama      String @map("nama")
+  FileBase  String @map("file_base")
   File      File   @relation(fields: [FileId], references: [FileId], onDelete: Cascade)
   Mhs       Mhs    @relation(fields: [MhsId], references: [MhsId], onDelete: Cascade)
 

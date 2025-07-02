@@ -124,7 +124,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
     const pdfBuffer = Buffer.concat(chunks);
 
     try {
-      const pdfsDir = path.join(process.cwd(), "uploads");
+      const pdfsDir = path.join(process.cwd(), "tmp");
       await fs.mkdir(pdfsDir, { recursive: true });
       const sanitizedInternName = !dataDiriServer
         ? "-"

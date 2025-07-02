@@ -21,7 +21,7 @@ app.get('/', async (c) => {
                 { status: 400 }
             )
         }
-        const filePath = path.join(process.cwd(), 'uploads', 'files', filename)
+        const filePath = path.join(process.cwd(), 'tmp', 'files', filename)
     
         try {
             const stat = fs.statSync(filePath)
@@ -113,7 +113,7 @@ app.post('/', async (c) => {
 
     const buffer = Buffer.from(await file.arrayBuffer())
     const filename = `${uuidv4()}.${fileExt}`
-    const dir = path.join(process.cwd(), 'uploads', 'files')
+    const dir = path.join(process.cwd(), 'tmp', 'files')
 
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true })
@@ -151,7 +151,7 @@ app.delete('/', async (c) => {
         },
     })
 
-    const avatarDir = path.join(process.cwd(), 'uploads', 'files')
+    const avatarDir = path.join(process.cwd(), 'tmp', 'files')
 
     if (file !== null) {
         const oldPath = path.join(avatarDir, file.Nama || '')

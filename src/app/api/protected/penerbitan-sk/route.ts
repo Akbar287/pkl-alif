@@ -25,7 +25,7 @@ app.get("/", async (c) => {
         { status: 400 }
       )
     }
-        const filePath = path.join(process.cwd(), 'uploads', filename)
+        const filePath = path.join(process.cwd(), 'tmp', filename)
     
         try {
             const stat = fs.statSync(filePath)

@@ -6,12 +6,14 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export async function getPenerbitanSkPagination(
   page: number,
   limit: number,
-  search: string
+  search: string,
+  roleName: string
 ): Promise<Pagination<PersetujuanSubagPagination[]>> {
   const params = new URLSearchParams({
     page: String(page),
     limit: String(limit),
     search,
+    _r: roleName,
   });
   const res = await fetch(
     `${BASE_URL}/api/protected/penerbitan-sk?${params.toString()}&_j=_pg`

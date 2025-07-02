@@ -7,6 +7,7 @@ import { handle } from "hono/vercel";
 import fs from 'fs'
 import path from 'path'
 import mime from 'mime'
+import { getSession } from "@/provider/api";
 
 const app = new Hono().basePath("/api/protected/penerbitan-sk");
 
@@ -14,15 +15,16 @@ app.use("*", withApiAuth);
 
 app.get("/", async (c) => {
   const jenis = c.req.query("_j")
-
+  
+  
   if(jenis?.match('_fs')) {
     const filename = c.req.query('_nf')
-        if (!filename) {
-            return c.json(
-                { data: [], status: 'error', message: 'file is required' },
-                { status: 400 }
-            )
-        }
+    if (!filename) {
+      return c.json(
+        { data: [], status: 'error', message: 'file is required' },
+        { status: 400 }
+      )
+    }
         const filePath = path.join(process.cwd(), 'uploads', filename)
     
         try {
@@ -51,9 +53,61 @@ app.get("/", async (c) => {
     const page = Number(c.req.query("page") ?? "1");
     const limit = Number(c.req.query("limit") ?? "10");
     const search = c.req.query("search") ?? "";
+    const roleName = c.req.query("_r");
+    const session = await getSession()
+
+    if(!roleName) {
+      return c.json({
+        status: 'error', message: "Query Error", data: []
+      }, 200)
+    }
+    if(!session) {
+      return c.json({
+        status: 'error', message: "Query Error", data: []
+      }, 200)
+    }
   
-    let where: Prisma.StatusFormasiMhsWhereInput = search
-      ? {
+    
+    let where: Prisma.StatusFormasiMhsWhereInput = {} 
+    if (roleName.match('Magang')) {
+      if(search) {
+        where = {
+          AND: [
+            {
+              OR: [
+                { Formasi: { Nama: { contains: search, mode: "insensitive" } } },
+                { Formasi: { Magang: { Nama: { contains: search, mode: "insensitive" } } } },
+              ],
+            },
+            {
+              Status: {
+                Nama: "Sk Terbit"
+              },
+            }, {
+              Mhs: {
+                UserId: session.user.id
+              }
+            }
+          ]
+        }
+      } else {
+        where = {
+          AND: [
+            {
+              Status: {
+                Nama: "Sk Terbit"
+              }
+            }, {
+              Mhs: {
+                UserId: session.user.id
+              }
+            }
+          ]
+        }
+      }
+    } else {
+      if(search) {
+        where = {
           OR: [
             { Formasi: { Nama: { contains: search, mode: "insensitive" } } },
             { Formasi: { Magang: { Nama: { contains: search, mode: "insensitive" } } } },
@@ -62,10 +116,13 @@ app.get("/", async (c) => {
             Nama: "Approved Kasubag"
           }
         }
-      : {Status: {
+      } else {
+        where = {Status: {
             Nama: "Approved Kasubag"
-          }};
-  
+          }}
+      }
+    }
+
     const [data, total] = await Promise.all([
       prisma.statusFormasiMhs.findMany({
         where,

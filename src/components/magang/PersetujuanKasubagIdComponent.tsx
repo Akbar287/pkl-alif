@@ -202,7 +202,7 @@ const PersetujuanKasubagIdComponent = ({
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Asal Sekolah</TableCell>
+                  <TableCell>Asal Sekolah / Universitas</TableCell>
                   <TableCell>
                     {!dataDiriServer
                       ? ""

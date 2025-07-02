@@ -64,6 +64,11 @@ import { useRouter } from "next/navigation";
 import { getPenerbitanSkPagination } from "@/services/Magang/PenerbitanSkService";
 
 const PenerbitanSkComponent = () => {
+  const [role, setRole] = React.useState<{
+    RoleId: string;
+    Nama: string;
+    Icon: string;
+  } | null>(null);
   const router = useRouter();
   const [dataMagang, setDataMagang] = React.useState<
     PersetujuanSubagPagination[]
@@ -99,12 +104,16 @@ const PenerbitanSkComponent = () => {
   const [dataDetail, setDataDetail] =
     React.useState<PersetujuanSubagPagination | null>(null);
 
-  React.useEffect(() => {
-    setLoading(true);
+  function getAllData(roleName: {
+    RoleId: string;
+    Nama: string;
+    Icon: string;
+  }) {
     getPenerbitanSkPagination(
       paginationState.page,
       paginationState.limit,
-      search
+      search,
+      roleName.Nama
     )
       .then((res) => {
         setDataMagang(res.data);
@@ -123,6 +132,19 @@ const PenerbitanSkComponent = () => {
       .catch((err) => {
         setLoading(false);
       });
+  }
+  React.useEffect(() => {
+    if (!role) {
+      const rolelogin = localStorage.getItem("pkl-alif.role");
+      if (rolelogin) {
+        let temp = JSON.parse(rolelogin);
+        setRole(temp);
+        getAllData(temp);
+      }
+    }
+    if (role) {
+      getAllData(role);
+    }
   }, [paginationState.page, search, paginationState.limit]);
 
   const columns: ColumnDef<PersetujuanSubagPagination>[] = [

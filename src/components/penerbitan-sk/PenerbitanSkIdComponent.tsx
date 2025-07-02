@@ -175,7 +175,7 @@ const PenerbitanSkIdComponent = ({
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>Asal Sekolah</TableCell>
+                  <TableCell>Asal Sekolah/Universitas</TableCell>
                   <TableCell>
                     {!dataDiriServer
                       ? ""
@@ -271,18 +271,20 @@ const PenerbitanSkIdComponent = ({
           </CardContent>
           <CardFooter>
             <div className="w-full flex justify-center">
-              <Button
-                className="mx-2  hover:scale-110 active:scale-90 transition-all duration-100 cursor-pointer"
-                variant={"default"}
-                disabled={loading}
-                onClick={() => {
-                  gotoNextStep();
-                }}
-                type="button"
-              >
-                Status Selesai
-                <ChevronRight />
-              </Button>
+              {statusServer?.Status.Nama.match("Approved Kasubag") && (
+                <Button
+                  className="mx-2  hover:scale-110 active:scale-90 transition-all duration-100 cursor-pointer"
+                  variant={"default"}
+                  disabled={loading}
+                  onClick={() => {
+                    gotoNextStep();
+                  }}
+                  type="button"
+                >
+                  Status Selesai
+                  <ChevronRight />
+                </Button>
+              )}
             </div>
           </CardFooter>
         </Card>

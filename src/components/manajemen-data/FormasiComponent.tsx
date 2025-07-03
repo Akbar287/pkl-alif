@@ -325,170 +325,178 @@ const FormasiComponent = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Cari Data ..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className="max-w-sm"
-        />
-        <div className="w-full justify-end flex">
-          <Button className="mr-2" onClick={() => buatData()}>
-            Tambah
-          </Button>
-          <Select
-            value={String(paginationState.limit)}
-            onValueChange={(value) =>
-              setPaginationState({
-                ...paginationState,
-                limit: Number(value),
-              })
-            }
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Pilih Limit Data" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Pilih Limit Data</SelectLabel>
-                {[5, 10, 20, 50, 75, 100].map((l, idx) => (
-                  <SelectItem value={String(l)} key={idx}>
-                    {l}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      {loading ? (
-        <div className="space-y-2">
-          {Array.from({ length: paginationState.limit }).map((_, i) => (
-            <div key={i} className="flex space-x-4">
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-[60%]" />
-                <Skeleton className="h-4 w-[40%]" />
-              </div>
-            </div>
-          ))}
+      {selectedData === "" ? (
+        <div className="flex justify-center">
+          <h1>Silakan Pilih Magang Terlebih Dahulu</h1>
         </div>
       ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    Tidak Ada Data.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      )}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          Menampilkan{" "}
-          {paginationState.page * paginationState.limit -
-            paginationState.limit +
-            1}{" "}
-          -{" "}
-          {paginationState.totalElement <
-          paginationState.page * paginationState.limit
-            ? paginationState.totalElement
-            : paginationState.page * paginationState.limit}{" "}
-          dari {paginationState.totalElement} Data.
-        </div>
-        <div className="flex items-center space-x-2 mt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setPaginationState({
-                ...paginationState,
-                page: paginationState.page - 1,
-              });
-            }}
-            disabled={!paginationState.hasPrevious}
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-
-          {Array.from(
-            { length: paginationState.totalPage },
-            (_, i) => i + 1
-          ).map((p) => (
-            <Button
-              key={p}
-              variant={p === paginationState.page ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                if (paginationState.page !== p) {
+        <React.Fragment>
+          <div className="flex items-center py-4">
+            <Input
+              placeholder="Cari Data ..."
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              className="max-w-sm"
+            />
+            <div className="w-full justify-end flex">
+              <Button className="mr-2" onClick={() => buatData()}>
+                Tambah
+              </Button>
+              <Select
+                value={String(paginationState.limit)}
+                onValueChange={(value) =>
                   setPaginationState({
                     ...paginationState,
-                    page: p,
-                  });
+                    limit: Number(value),
+                  })
                 }
-              }}
-            >
-              {p}
-            </Button>
-          ))}
+              >
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="Pilih Limit Data" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Pilih Limit Data</SelectLabel>
+                    {[5, 10, 20, 50, 75, 100].map((l, idx) => (
+                      <SelectItem value={String(l)} key={idx}>
+                        {l}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          {loading ? (
+            <div className="space-y-2">
+              {Array.from({ length: paginationState.limit }).map((_, i) => (
+                <div key={i} className="flex space-x-4">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-[60%]" />
+                    <Skeleton className="h-4 w-[40%]" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        Tidak Ada Data.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex-1 text-sm text-muted-foreground">
+              Menampilkan{" "}
+              {paginationState.page * paginationState.limit -
+                paginationState.limit +
+                1}{" "}
+              -{" "}
+              {paginationState.totalElement <
+              paginationState.page * paginationState.limit
+                ? paginationState.totalElement
+                : paginationState.page * paginationState.limit}{" "}
+              dari {paginationState.totalElement} Data.
+            </div>
+            <div className="flex items-center space-x-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setPaginationState({
+                    ...paginationState,
+                    page: paginationState.page - 1,
+                  });
+                }}
+                disabled={!paginationState.hasPrevious}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setPaginationState({
-                ...paginationState,
-                page: paginationState.page + 1,
-              });
-            }}
-            disabled={!paginationState.hasNext}
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
+              {Array.from(
+                { length: paginationState.totalPage },
+                (_, i) => i + 1
+              ).map((p) => (
+                <Button
+                  key={p}
+                  variant={p === paginationState.page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    if (paginationState.page !== p) {
+                      setPaginationState({
+                        ...paginationState,
+                        page: p,
+                      });
+                    }
+                  }}
+                >
+                  {p}
+                </Button>
+              ))}
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setPaginationState({
+                    ...paginationState,
+                    page: paginationState.page + 1,
+                  });
+                }}
+                disabled={!paginationState.hasNext}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </React.Fragment>
+      )}
       <SheetManageData
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}

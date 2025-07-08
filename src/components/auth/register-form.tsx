@@ -266,15 +266,17 @@ const RegisterForm = () => {
                 disabled={loading}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Asal Sekolah</FormLabel>
+                    <FormLabel>Asal Sekolah / Universitas</FormLabel>
                     <FormControl>
                       <Textarea
                         disabled={loading}
                         {...field}
-                        placeholder="Asal Sekolah Anda."
+                        placeholder="Asal Sekolah / Universitas Anda."
                       />
                     </FormControl>
-                    <FormDescription>Masukan Asal Sekolah Anda</FormDescription>
+                    <FormDescription>
+                      Masukan Asal Sekolah / Universitas Anda
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
